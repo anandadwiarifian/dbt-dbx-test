@@ -34,12 +34,19 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   test_dbx:
     # Config indicated by + and applies to all files under models/example/
-    example:
-      +materialized: table
+    # example:
+    #   +materialized: table
     raw_stage:
       +materialized: view
     stage:
       +materialized: view
+    datavault:
+      +materialized: incremental
+      +file_format: delta
+      +location_root: '/mnt/adls_ss_finance/SS Finance/test'
+
 
 vars:
     "dbt_date:time_zone": "	Etc/GMT"
+    escape_char_left: ''
+    escape_char_right: ''
