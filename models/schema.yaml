@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: test_dbt
+    schema: test_dbt
+    tables:
+      - name: customer
+      - name: product
+      - name: order
+      - name: order_product

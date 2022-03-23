@@ -1,0 +1,5 @@
+packages:
+  - package: Datavault-UK/dbtvault
+    version: 0.8.2
+  - package: calogica/dbt_date
+    version: 0.5.4

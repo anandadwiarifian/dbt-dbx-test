@@ -36,3 +36,10 @@ models:
     # Config indicated by + and applies to all files under models/example/
     example:
       +materialized: table
+    raw_stage:
+      +materialized: view
+    stage:
+      +materialized: view
+
+vars:
+    "dbt_date:time_zone": "	Etc/GMT"
