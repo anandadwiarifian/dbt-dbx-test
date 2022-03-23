@@ -8,3 +8,10 @@ sources:
       - name: product
       - name: order
       - name: order_product
+  - name: stg_layer
+    schema: test_dbt
+    tables:
+      - name: stg_customer
+      - name: stg_product
+      - name: stg_order
+      - name: stg_order_product
