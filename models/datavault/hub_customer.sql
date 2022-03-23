@@ -1,4 +1,8 @@
-{{ config(materialized='incremental')    }}
+{{ config(
+    materialized='incremental',
+    unique_key='CUSTOMER_HK',
+    incremental_strategy='merge'
+)    }}
 
 {%- set yaml_metadata -%}
 source_model: stg_customer

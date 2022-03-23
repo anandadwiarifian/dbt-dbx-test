@@ -7,7 +7,7 @@
       
       
     
-        on false
+        on DBT_INTERNAL_SOURCE.CUSTOMER_HK = DBT_INTERNAL_DEST.CUSTOMER_HK
     
   
       

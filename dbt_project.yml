@@ -44,7 +44,7 @@ models:
       +materialized: incremental
       +file_format: delta
       +location_root: '/mnt/adls_ss_finance/SS Finance/test'
-      +incremental_strategy: merge
+      +incremental_strategy: append # merge
       tags: 
         - 'datavault'
 
