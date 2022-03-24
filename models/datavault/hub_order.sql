@@ -1,11 +1,9 @@
-{{ config(
-    materialized='incremental'
-)    }}
+{{ config(materialized='incremental') }}
 
 {%- set yaml_metadata -%}
-source_model: stg_customer
-src_pk: CUSTOMER_HK
-src_nk: CUSTOMER_ID
+source_model: stg_order_product
+src_pk: ORDER_HK
+src_nk: ORDER_ID
 src_ldts: LOAD_DATETIME
 src_source: RECORD_SOURCE
 {%- endset -%}

@@ -1,18 +1,16 @@
 {{ config(materialized='view') }}
 
 {%- set yaml_metadata -%}
-source_model: 'raw_customer'
+source_model: 'raw_product'
 derived_columns:
-  RECORD_SOURCE: '!1SAP'
+  RECORD_SOURCE: "!1SAP"
   LOAD_DATETIME: 'CURRENT_TIMESTAMP()'
 hashed_columns:
-  CUSTOMER_HK: CUSTOMER_ID
-  CUSTOMER_HASHDIFF:
+  PRODUCT_HK: PRODUCT_ID
+  PRODUCT_HASHDIFF:
     is_hashdiff: true
     columns:
-      - FIRST_NAME
-      - LAST_NAME
-      - EMAIL
+      - PRODUCT_DESC
 {%- endset -%}
 
 {% set metadata_dict = fromyaml(yaml_metadata) %}
