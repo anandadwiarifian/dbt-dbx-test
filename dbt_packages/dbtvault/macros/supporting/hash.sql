@@ -80,9 +80,9 @@
                 {%- endif -%}
             {%- else -%}
                 {%- if hash == 'SHA' -%}
-                    {{- "\n), '{}')), {}) AS {}".format(all_null | join(""), hash_size, dbtvault.escape_column_names(alias)) -}}
+                    {{- "\n), '{}'), {}) AS {}".format(all_null | join(""), hash_size, dbtvault.escape_column_names(alias)) -}}
                 {%- else -%}
-                    {{- "\n), '{}'))) AS {}".format(all_null | join(""), dbtvault.escape_column_names(alias)) -}}
+                    {{- "\n), '{}')) AS {}".format(all_null | join(""), dbtvault.escape_column_names(alias)) -}}
                 {%- endif -%}
             {%- endif -%}
         {%- else -%}
