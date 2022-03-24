@@ -28,21 +28,25 @@
 {%- set source_number = loop.index | string -%}
 
 row_rank_{{ source_number }} AS (
+    SELECT *
+    FROM
+    (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    SELECT {{ source_cols_with_rank | join(', ') }},
+    SELECT {{ dbtvault.prefix(source_cols_with_rank, 'rr') }},
     {%- else %}
-    SELECT {{ source_cols | join(', ') }},
+    SELECT {{ dbtvault.prefix(source_cols, 'rr') }},
     {%- endif %}
            ROW_NUMBER() OVER(
-               PARTITION BY ({{ src_pk_cols | join(', ') }})
-               ORDER BY {{ src_ldts }}
+               PARTITION BY {{ dbtvault.prefix([src_pk], 'rr') }}
+               ORDER BY {{ dbtvault.prefix([src_ldts], 'rr') }}
            ) AS row_number
-    FROM {{ ref(src) }}
+    FROM {{ ref(src) }} AS rr
     {%- if source_model | length == 1 %}
-    WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
-    AND {{ dbtvault.multikey(fk_cols, condition='IS NOT NULL') }}
+    WHERE {{ dbtvault.multikey(src_pk, prefix='rr', condition='IS NOT NULL') }}
+    AND {{ dbtvault.multikey(fk_cols, prefix='rr', condition='IS NOT NULL') }}
     {%- endif %}
-    QUALIFY row_number = 1
+    ) l
+    WHERE l.row_number = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
 {% endfor -%}
