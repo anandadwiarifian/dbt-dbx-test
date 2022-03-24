@@ -16,17 +16,17 @@
 
 {#- Select hashing algorithm -#}
 {%- if hash == 'MD5' -%}
-    {%- set hash_alg = 'MD5_BINARY' -%}
-    {%- set hash_size = 16 -%}
+    {%- set hash_alg = 'MD5' -%}
+    {%- set hash_size = 16 -%} {#- "not used for md5 algorithm" -#}
 {%- elif hash == 'SHA' -%}
-    {%- set hash_alg = 'SHA2_BINARY' -%}
-    {%- set hash_size = 32 -%}
+    {%- set hash_alg = 'SHA2' -%}
+    {%- set hash_size = 256 -%}
 {%- else -%}
-    {%- set hash_alg = 'MD5_BINARY' -%}
+    {%- set hash_alg = 'MD5' -%}
     {%- set hash_size = 16 -%}
 {%- endif -%}
 
-{%- set standardise = "NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS VARCHAR))), '')" %}
+{%- set standardise = "NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS STRING))), '')" %}
 
 {#- Alpha sort columns before hashing if a hashdiff -#}
 {%- if is_hashdiff and dbtvault.is_list(columns) -%}
@@ -41,16 +41,20 @@
     {%- else -%}
         {%- set escaped_column_str = dbtvault.escape_column_names(column_str) -%}
     {%- endif -%}
-    {{- "CAST(({}({})) AS BINARY({})) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', escaped_column_str), hash_size, dbtvault.escape_column_names(alias)) | indent(4) -}}
+    {%- if hash == 'SHA' -%}
+        {{- "{}({}, {}) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', escaped_column_str), hash_size, dbtvault.escape_column_names(alias)) | indent(4) -}}
+    {%- else -%}
+        {{- "{}({}) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', escaped_column_str), dbtvault.escape_column_names(alias)) | indent(4) -}}
+    {%- endif -%}
 
 {#- Else a list of columns to hash -#}
 {%- else -%}
     {%- set all_null = [] -%}
 
     {%- if is_hashdiff -%}
-        {{- "CAST({}(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) -}}
+        {{- "{}(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) -}}
     {%- else -%}
-        {{- "CAST({}(NULLIF(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) -}}
+        {{- "{}(NULLIF(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) -}}
     {%- endif -%}
 
     {%- for column in columns -%}
@@ -69,9 +73,17 @@
         {%- if loop.last -%}
 
             {% if is_hashdiff %}
-                {{- "\n)) AS BINARY({})) AS {}".format(hash_size, dbtvault.escape_column_names(alias)) -}}
+                {%- if hash == 'SHA' -%}
+                    {{- "\n), {}) AS {}".format(hash_size, dbtvault.escape_column_names(alias)) -}}
+                {%- else -%}
+                    {{- "\n)) AS {}".format(dbtvault.escape_column_names(alias)) -}}
+                {%- endif -%}
             {%- else -%}
-                {{- "\n), '{}')) AS BINARY({})) AS {}".format(all_null | join(""), hash_size, dbtvault.escape_column_names(alias)) -}}
+                {%- if hash == 'SHA' -%}
+                    {{- "\n), '{}')), {}) AS {}".format(all_null | join(""), hash_size, dbtvault.escape_column_names(alias)) -}}
+                {%- else -%}
+                    {{- "\n), '{}'))) AS {}".format(all_null | join(""), dbtvault.escape_column_names(alias)) -}}
+                {%- endif -%}
             {%- endif -%}
         {%- else -%}
 

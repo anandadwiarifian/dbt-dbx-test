@@ -38,6 +38,8 @@ models:
     #   +materialized: table
     raw_stage:
       +materialized: view
+      tags:
+        - 'raw'
     stage:
       +materialized: view
     datavault:
@@ -52,3 +54,4 @@ vars:
     "dbt_date:time_zone": "	Etc/GMT"
     escape_char_left: ''
     escape_char_right: ''
+    hash: SHA

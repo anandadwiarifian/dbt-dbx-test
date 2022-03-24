@@ -3,8 +3,8 @@
 {%- set yaml_metadata -%}
 source_model: 'raw_customer'
 derived_columns:
-  RECORD_SOURCE: "!SAP"
-  LOAD_DATETIME: '2022-03-23T01:51:48.163+0000'
+  RECORD_SOURCE: '!SAP'
+  LOAD_DATETIME: 'CURRENT_TIMESTAMP()'
 hashed_columns:
   CUSTOMER_HK: CUSTOMER_ID
   CUSTOMER_HASHDIFF:
