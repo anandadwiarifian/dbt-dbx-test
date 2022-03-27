@@ -10,7 +10,7 @@ This project uses dbt-core 1.0.4 version and dbt databrick plugin 1.0.1 version.
 
 To install both dependencies, run: 
 ```sh
-pip install dbt-core==1.0.4 dbt-databricks==1.01
+pip install dbt-core==1.0.4 dbt-databricks==1.0.1
 ```
 
 
