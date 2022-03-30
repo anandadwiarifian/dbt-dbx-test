@@ -2,9 +2,9 @@
 source_model: stg_order_product
 src_pk: LINK_ORDER_PRODUCT_HK
 src_fk: 
-  - ORDER_ID
-  - PRODUCT_ID
-  - CUSTOMER_ID
+  - ORDER_HK
+  - PRODUCT_HK
+  - CUSTOMER_HK
 src_ldts: LOAD_DATETIME
 src_source: RECORD_SOURCE
 {%- endset -%}
